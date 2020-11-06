@@ -1,0 +1,235 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+        <meta name="generator" content="Jekyll v4.1.1">
+        <title>Starter Template · Bootstrap</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+        <meta name="theme-color" content="#563d7c">
+
+        <style>
+         body {
+             padding-top: 5rem;
+         }
+         .starter-template {
+             padding: 3rem 1.5rem;
+             text-align: center;
+        }
+         .bd-placeholder-img {
+             font-size: 1.125rem;
+             text-anchor: middle;
+             -webkit-user-select: none;
+             -moz-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+         }
+
+         @media (min-width: 768px) {
+             .bd-placeholder-img-lg {
+                 font-size: 3.5rem;
+             }
+         }
+         .poloniex_amount {
+             background: lightgreen;
+         }
+
+         .bittrex_amount {
+             background: lightblue;
+         }
+         .orderBook {display: flex;}
+
+         .orderBook div {flex: 1;}
+         .askBook {border-right: 1px solid grey;}
+         .askBook, .bidBook {padding: 0 1rem;}
+         .heading {display: flex; align-items: center;}
+         .heading {font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;}
+         .heading div,
+         .row div {flex: 1;
+             padding: 0.25rem 0;
+         }
+         .row {
+             border-bottom: 1px solid #eee;
+         }
+         .row {display: flex; justify-content: space-between;}
+        </style>
+    </head>
+
+    <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+<main role="main" class="container">
+
+  <div class="starter-template">
+
+        <section class="orderBook">
+            <div class="askBook">
+                <h2>Asks</h2>
+                <div class="heading">
+                    <div class="price">
+                        Price
+                    </div>
+                    <div class="poloniex_amount">
+                        Poloniex
+                    </div>
+                    <div class="bittrex_amount">
+                        Bittrex
+                    </div>
+                    <div class="total_amount">
+                        Total Liquidity
+                    </div>
+                </div>
+                @each(price in askPrices)
+                <div class="row">
+                    @if(bidPriceToAmount.bittrex[price])
+                        <div class="price" data-match-color="{{price}}">
+                    @elseif(bidPriceToAmount.poloniex[price])
+                        <div class="price" data-match-color="{{price}}">
+                    @else
+                        <div class="price">
+                    @endif
+                        {{price}}
+                    </div>
+
+                    @if(bidPriceToAmount.bittrex[price])
+                        <div class="poloniex_amount match" data-match-color="{{price}}">
+                    @else
+                        <div class="poloniex_amount">
+                    @endif
+                        {{askPriceToAmount.poloniex[price] || '0.00000000'}}
+                    </div>
+
+                    @if(bidPriceToAmount.poloniex[price])
+                        <div class="bittrex_amount match" data-match-color="{{price}}">
+                    @else
+                        <div class="bittrex_amount">
+                    @endif
+                        {{askPriceToAmount.bittrex[price] || '0.00000000'}}
+                    </div>
+
+                    <div class="total_amount">
+                        {{askTotals[price]}}
+                    </div>
+                </div>
+                @endeach
+            </div>
+
+            <div class="bidBook">
+                <h2>Bids</h2>
+                <div class="heading">
+                    <div class="price">
+                        Price
+                    </div>
+                    <div class="poloniex_amount">
+                        Poloniex
+                    </div>
+                    <div class="bittrex_amount">
+                        Bittrex
+                    </div>
+                    <div class="total_amount">
+                        Total Liquidity
+                    </div>
+                </div>
+                @each(price in bidPrices)
+                <div class="row">
+                    @if(askPriceToAmount.bittrex[price])
+                        <div class="price" data-match-color="{{price}}">
+                    @elseif(askPriceToAmount.poloniex[price])
+                        <div class="price" data-match-color="{{price}}">
+                    @else
+                        <div class="price">
+                    @endif
+                        {{price}}
+                    </div>
+
+
+                    @if(askPriceToAmount.bittrex[price])
+                        <div class="poloniex_amount match" data-match-color="{{price}}">
+                    @else
+                        <div class="poloniex_amount">
+                    @endif
+                        {{bidPriceToAmount.poloniex[price] || '0.00000000'}}
+                    </div>
+
+                    @if(askPriceToAmount.poloniex[price])
+                        <div class="bittrex_amount match" data-match-color="{{price}}">
+                    @else
+                        <div class="bittrex_amount">
+                    @endif
+                        {{bidPriceToAmount.bittrex[price] || '0.00000000'}}
+                    </div>
+                    <div class="total_amount">
+                        {{bidTotals[price]}}
+                    </div>
+                </div>
+                @endeach
+            </div>
+        </section>
+  </div>
+
+</main><!-- /.container -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+        <script>
+         var matches = document.querySelectorAll('[data-match-color]')
+
+         matches.forEach(function(m) {
+             var randomColor = intToRGB(hashCode(m.getAttribute('data-match-color')))
+             m.style.backgroundColor = "#" + randomColor
+         })
+
+         function hashCode(str) {
+             var hash = 0;
+             for (var i = 0; i < str.length; i++) {
+                 hash = str.charCodeAt(i) + ((hash << 5) - hash);
+             }
+             return hash;
+         } 
+
+         function intToRGB(i){
+             var c = (i & 0x00FFFFFF)
+                 .toString(16)
+                 .toUpperCase();
+
+             return "00000".substring(0, 6 - c.length) + c;
+        }
+
+        </script>
+    </body>
+</html>
